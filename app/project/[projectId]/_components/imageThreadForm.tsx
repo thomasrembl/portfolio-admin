@@ -8,7 +8,6 @@ import { Plus } from "lucide-react";
 import { ImageTable } from "./imageTable";
 import { ImageEdit } from "./imageEdit";
 import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
 
 interface Image {
   _id: string;
@@ -22,7 +21,6 @@ interface BaseFormProps {
 }
 
 export const ImageThreadForm = ({ params }: BaseFormProps) => {
-  const router = useRouter();
   const [data, setData] = useState<Image[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);

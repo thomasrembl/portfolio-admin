@@ -31,7 +31,7 @@ export const handleDelete = async (
   }
 };
 
-export const columns: ColumnDef<Project, any>[] = [
+export const columns: ColumnDef<Project, string>[] = [
   {
     id: "title",
     accessorKey: "translation.fr.title",
