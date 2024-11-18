@@ -36,9 +36,6 @@ const formSchema = z.object({
   title: z.string().min(1, {
     message: "Title is required",
   }),
-  slug: z.string().min(1, {
-    message: "Slug is required",
-  }),
   category: z.enum(["personnal", "school", "work"], {
     required_error: "Please select a category to display.",
   }),
@@ -53,6 +50,12 @@ const formSchema = z.object({
       }
     ),
 });
+const titleToSlug = (title: string) => {
+  return title
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "");
+};
 
 const translateText = async (text: string, targetLang: string) => {
   const apiUrl = process.env.NEXT_PUBLIC_DEEPL_API_URL as string;
@@ -78,7 +81,6 @@ const Create = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      slug: "",
       category: "personnal",
       image: null,
     },
@@ -135,6 +137,7 @@ const Create = () => {
         });
         return;
       }
+      const slug = titleToSlug(values.title);
 
       const translatedTitle = await translateText(values.title, "EN");
 
@@ -163,7 +166,7 @@ const Create = () => {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/projects/create`,
         {
-          slug: values.slug,
+          slug: slug,
           imgCover: uploadedImageUrl,
           translation: {
             fr: {
@@ -215,27 +218,6 @@ const Create = () => {
                         <FormLabel>
                           <p className=" font-semibold text-xs text-cod-gray-950">
                             Titre
-                          </p>
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            disabled={isSubmitting}
-                            placeholder="..."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="slug"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          <p className=" font-semibold text-xs text-cod-gray-950">
-                            Slug
                           </p>
                         </FormLabel>
                         <FormControl>
